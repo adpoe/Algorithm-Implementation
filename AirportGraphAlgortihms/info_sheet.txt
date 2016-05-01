@@ -1,0 +1,134 @@
+========================================
+CS/COE 1501 Assignment Information Sheet
+----------------------------------------
+
+You must submit an information sheet with every assignment.  Also be sure
+to submit all materials following the procedures described on the
+submission procedures page.
+
+Name:  Anthony Poerio
+
+Lecture section:  Mon/Weds @9:30AM
+
+Recitation day and time:  Fridays @3:00PM
+
+Assignment #:  4
+
+Program due date: April 7, 2016
+
+Handed in date:  March 27, 2016
+
+Source code file name(s):
+   Airline.java
+   Bag.java
+   BreadthFirstPaths.java
+   DepthFirstPaths.java
+   DijkstraAllPairsSP.java
+   DijkstraSP.java
+   DirectedEdge.java
+   Edge.java
+   EdgeWeightedDigraph.java
+   EdgeWeightedGraph.java
+   Graph.java
+   In.java
+   IndexMinPQ.java
+   KruskalMST.java
+   LinkedQueue.java
+   LinkedStack.java
+   MinPQ.java
+   PrimMST.java
+   Queue.java
+   SeparateChainHashST.java
+   SequentialSearchST.java
+   SET.java
+   Stack.java
+   StdOut.java
+   StdRandom.java
+   UF.java
+
+
+Other file name(s) (if relevant):
+    Tests.java -- I used this for testing,
+    but I was using print statements in the Airline.java class
+    which are now commented out.  I'm including this for completeness.
+    This just ensures that the I/O is done correctly, via print statements
+    and I'm including it for my own reference later. You could uncomment
+    my print statements in Airline.java to view, but otherwise this
+    doesn't need to be run.
+
+
+Does your program run without error?:
+    Yes, this program runs without error.
+
+If not, what is/are the error(s) and which parts of your program run
+correctly?:
+    I did NOT find errors on my testing.
+
+
+Additional comments to the grader:
+    #Overall
+    My strategy for this program was to keep things simple and use known
+    algorithms as judiciously as possible. I used many of Sedgewick's 
+    algorithms, but I had to edit each of them a good bit to work for this
+    assignment. As such, there a lot of dependencies to compile for this,
+    but that's because I **ONLY** used algorithms we've discussed in class
+    this semester; I didn't use much if anything from the Java Standard Library.
+    (I.e.--When I needed a Queue, I used SedgeWick's LinkedQueue instead of
+    Java's, and so on.) That said, everything SHOULD compile with just
+    "javac Airline.java", but excuse me if not. I know there are a lot of
+    dependencies.
+
+    # Structure
+    - The graph itself is represented as an EdgeWeightedGraph, which uses
+    an **Adjacency List** as its backing. See in: EdgeWeightedGraph.java
+
+    # Compilation
+    - Program should compile with:
+        "javac Airline.java"
+        There are a lot of dependencies, but this file uses all of them, so it 
+        should compile all of the others in the process.
+
+    # Running
+    - Program will run on command line with:
+        java Airline
+
+    # Show List of Routes
+    - This is done by updating the .toString() function the EdgeWeightdGraph
+    class created by Sedgewick.
+
+    # Display MST
+    - This is done using Kruskal's Algorithm
+
+    # Get Shortest Path by MILES
+    - This is done using Dijkstra's Algorithm
+
+    # Get Shortest Path by PRICE
+    - Also done using Dijkstra's Algorithm
+
+    # Get Shortest Path by HOPS
+    - Done by converting our data structure to an **UNWEIGHTED GRAPH**,
+    then using BreadthFirstSearch to find the shortest path on our 
+    unweighted Graph.
+
+    # FIND All Trips Less Than Dollar Amount
+    - Done by converted our data structure to an **EDGE WEIGHTED DIGRAPH**,
+    then using **a ListAllPaths** class which I worte, and running it 
+    from **EACH**  >>start vertex<< to  **EACH** >>end vertex<<.
+    - Also uses PRUNING to cut down on runtime. See lines: 520 to 573
+    of Airline.java
+
+    # ADD New Route
+    - Done by adding and edge and using FILE IO to reset and re-build our graph
+
+    # REMOVE a Route
+    - Same as add, uses FILE IO to remove the edge and REBUILD the graph from 
+    scratch, without the edge we removed.
+
+    # Exit Program
+    - Saves the data by writing to a file and does a system exit with code zero.
+
+
+
+
+
+

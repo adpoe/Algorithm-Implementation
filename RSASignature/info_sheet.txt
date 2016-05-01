@@ -1,0 +1,58 @@
+========================================
+CS/COE 1501 Assignment Information Sheet
+----------------------------------------
+
+You must submit an information sheet with every assignment.  Also be sure
+to submit all materials following the procedures described on the
+submission procedures page.
+
+Name:  Anthony Poerio
+       (adp59@pitt.edu)
+
+Lecture section:  Mon/Weds @9:30AM
+
+Recitation day and time:  Friday @3:00PM
+
+Assignment #: 5 - Generating RSA Keypairs
+
+Program due date:  Apr 24, 2016
+
+Handed in date:  Apr 18 2016
+
+Source code file name(s):
+    MySign.java
+    MyKeyGen.java
+    HashExVerify.java
+    HashEx.java
+
+
+Other file name(s) (if relevant):
+    I've also included a file named "rsa.txt".
+    This is the file I was using to test the program with. 
+    I'm sure you'll use your own, but including it only because it's
+    what I was using personally.
+
+
+Does your program run without error?:
+    Yes. This program does run without error.
+
+    I have confirmed that:
+    - Program correctly identifies when files match
+    - Program correctly identifies when a file has been tampered with, 
+    after it was signed.
+
+If not, what is/are the error(s) and which parts of your program run
+correctly?:
+    All parts run correctly, according to my testing.
+
+
+
+Additional comments to the grader:
+    Thank you sincerely for your time.
+
+
+
+
+
+
+

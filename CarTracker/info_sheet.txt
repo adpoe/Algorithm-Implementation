@@ -1,0 +1,71 @@
+========================================
+CS/COE 1501 Assignment Information Sheet
+----------------------------------------
+
+You must submit an information sheet with every assignment.  Also be sure
+to submit all materials following the procedures described on the
+submission procedures page.
+
+Name: Anthony (Tony) Poerio 
+      adp59@pitt.edu
+
+Lecture section: Mon/Weds @9:30am
+
+Recitation day and time:  Friday @3:00pm
+
+Assignment #: 3
+
+Program due date: March 21, 2016 
+
+Handed in date: March 20, 2016 
+
+Source code file name(s):
+CarTracker.java
+Car.java
+RelativePQ.java
+IndexMinPQ.java
+
+
+
+
+
+
+Other file name(s) (if relevant):
+Automated test suite:
+Main.java --> if you compile and run Main.java, you will run my test suite.
+
+
+
+
+
+
+Does your program run without error?:
+Yes.
+
+If not, what is/are the error(s) and which parts of your program run
+correctly?:
+I've tested the program, both with automated tests, and on the command line directly.
+It functions as expected.
+
+
+
+
+
+
+Additional comments to the grader:
+To run the program please take the following steps:
+1.  Compile with:   javac CarTracker.java
+2.  Run with:       java CarTracker
+3.  Enjoy =)
+4.  But seriously, since grading is a pain, you can also use my tests to help validate.
+    They're in Main.java. Including only in case they would be helpful.
+
+
+Thank you sincerely for your time,
+Tony
+
+
+
+
+
+

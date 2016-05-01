@@ -1,0 +1,215 @@
+Anthony (Tony) Poerio
+adp59@pitt.edu
+CS1501 - Algorithm Implementation
+University of Pittsburgh
+Spring 2016
+Assignment #03 - Implementation Notes
+
+# Overview of Data Structure
+
+## Specifications
+For this project, our goal was to create an application that helps users
+determine the best car to buy.
+
+The underlying data-structure needed to be a Priority Queue that that stores 
+objects according to the relative priorities of two of their attributes,
+so that it was easy and efficient to get retrieve objects with the
+minimum value of either attribute. The two attributes whose priorities
+we were required to take into account for our PQ's are:  Price, and Mileage.
+
+The data structure is also required to be indexable, allowing for efficient
+update of entered items.
+
+Moreover, the structure was required to support the following operations:
+- Add an Car
+- Update an Car
+- Retrieve Car with lowest Price
+- Retrieve Car with lowest Mileage
+- Retrieve Car with lowest Price, for a given "Make" and "Model"
+- Retrieve Car with lowest Mileage, for a given "Make" and "Model"
+
+## Implementation
+In order to support these requirements I made the following implementation
+decisions:
+- The overall data structure will use TWO Index-Backed Minimum-Oriented
+Priority Queues, each built using a binary heap.
+- Each priority queue will store the SAME VALUES, but these values will be stored
+in a heap whose priority is determined by a DIFFERENT ATTRIBUTE.
+- The first PQ will store values based on Minimum Price
+- The second PQ will store vlaues based on Minimum Mileage
+- Each priority is separately indexable using an array-based binary heap,
+which allows for efficient operations on each PQ.
+- Both PQ's are then held within a larger a larger over-arching data
+structure called "RelativePQ".
+- Relative PQ also holds the VIN ID of each car within an array of Strings,
+and this acts as the MASTER INDEX for the full data structure.
+- The upside of this methodology is: Speed and Lower Engineering Effort
+        1.  It enables fast operations on each PQ (many operations in Lg(N) time)
+        2.  It allows for separation of concerns. By storing each PQ's order
+        separately, we minimize potential for error and reduce the complexity
+        of the code, overall.
+- The downside of this methodology is: Increased Space
+        1.  Because we are storing the data separately in each PQ,
+        we are duplicating much of the content and doubling our memory
+        consumption.
+        2.  This will become a problem should the data-set grow to be
+        very large.
+        3.  The space requirement will be 2N, because we to duplicate
+        everything into the RelativePQ data structure. This redundancy
+        is NOT strictly necessary, but I opted for it in order to more
+        easily test and ensure that everything was working properly,
+        and it also gave me even faster access to all the data I needed
+        at each step. Because the data set I was using was small, this
+        was not an issue. For production level implementations with 
+        massive data sets, we may need to further optimize for memory
+        consumption, but it would add an extra layer of complexity to
+        some operations, and I opted to avoid that.
+- I felt the increased memory consumption required for separate storage
+was worth it, because it allowed me to easily guarantee safety of each data
+set by separating them. And it also allowed me to use nearly all of the
+classical operations defined for PQ's, which are optimized for speed. 
+True, many of these operations will need to be performed twice (once on each PQ)
+but this still leads to faster Asymptotic Runtime than a more complex version
+of the algorithm may require. For example, when UPDATING, or ADDING, or REMOVING
+an item in either PQ, we are guaranteed O(log(N)) speed. Even if we do this
+twice (once for each PQ), we can still perform operations in 2*log(n) speed.
+- Again, memory consumption may be large in this implementation for a bigger
+data set, and for some of the more complex operations I duplicated more content
+in order to perform the operations safely (as I will explain below), but
+I believe that guaranteeing SPEED and SAFETY was more important that reducing
+MEMORY consumption, BECAUSE the data set for this application is likely to be small.
+- For a data set that was very large, or if memory is low and at a premimum,
+then a different implementation may be preferred.
+
+
+# Functions Supported and Analysis of Each
+This section outlines the main functions used by the PQ data structures.
+Each function has notes on:
+- Implementation details, and reasons for all design decisions
+- Asymptotic runtime analysis
+- Space requirement analysis
+- Engineering effort analysis
+
+## add()
+The add function works by taking a Car object, and making two deep copies of it.
+The first copy is given the boolean flag "compareOnPrice", and inserted in the PQ which
+compares and orders items based on their PRICE. This insert is done in O(log(n)) 
+time. The second copy is given the boolean flag "compareOnMiles", and inserted into the PQ
+which orders items based on their MILEAGE. Again, this is done in O(log(n)) time,
+meaning that total runtime for an insert is 2*log(n), or simply O(log(n)).
+
+I then confirm that the PQ data structure contains the most updated values for its own
+index arrays, by copying them over from both underlying PQ data structures.
+This also helped me make sure that everything was easily accessible, and it reduced the overall ENGINEERING EFFORT. 
+Because we have copies, the overall space consumption is 2N.
+
+However this extra space helped ensure that all operations are always safe,
+it made writing my test cases very simple, and overall, I think it is
+a fair tradeoff, as long as we are not using a very large data set.
+
+## update()
+The update function works by accepting a Car object holds the value we wish to update.
+All different attribute updates are routed through this same function, and boolean values
+are used to control which attributes are actually updated on each run. This code re-use
+was done to reduce overall engineering effort, and to use the same function (which was 
+known to work) for a number of different actions.
+
+The function works by using the VIN ID of the Car object which was passed in to walk through
+the index array of both PQ's until we get a direct reference to the Car we're interested in.
+Then,we update the Car object directly, within its binary heap-index array.
+Finally, we call both SINK and SWIM on the object we've updated, within the
+binary heap. The idea here is that our update **may** have violated the heap condition,
+and so we need to call both sink() and swim() in order to re-order the heap appropriately.
+
+Because we're operating right on each heap, these operations are fast:
+- O(log(n)) for sink
+- O(log(n)) for swim
+- The slowest part of this process, asymptotically, is actually finding the Car object itself.
+Because we have to use a For-loop to iterate through the heap array, we need O(n) to find the
+object's index.
+- I'm also doing a check to ensure that the VIN is valid before we ever touch the heap,
+and this is also and O(n) operation, but it doesn't affect the asymptotic runtime, since we
+need to step through the heap in a for-loop to even get the object's index to begin with. 
+
+All in all, this operation requires a runtime of O(n*log(n)), and it requires no extra space
+beyond one additional Car object, which is passed into the function. Update is an efficient operation,
+and it was thoroughly tested. Because of this, I later re-used it to cleverly complete a few of the
+other required functions.
+
+
+## remove()
+Remove is completed by re-using our UPDATE function in a clever way. 
+
+To remove an item, we call update(), and set the value price/mileage value
+of the Car object we want to remove to 0. Because we're buying these cars (and thus they must
+have a price > 0.), and because they are used (and thus must have mileage > 0), this means
+that the Car we want to remove will always be the MIN priority value in both heaps.
+
+Because it's the MIN priority, it can easily be removed. So we just call the delMin() function
+from our underlying IndexMinPQ structure, which completes each delete in O(1) time.
+
+I also do some cleanup on the array of strings which holds our VIN's, because we need to remove
+the VIN for the car which was removed. But this also takes O(N) time, so it doesn't add any 
+asymptotic overhead.
+
+Total runtime and space:
+- O(n*log(n)) for Update --> sets the values we are comparing on to 0
+- O(1) for delMin() --> since our deleted car must now have the lowest priority
+- Only extra space needed: ONE new Car Object, which is created only to be passed into 
+the update function.
+
+
+
+## retrieveLowestPriceCar()
+Retrieve lowest price is done simply by calling minKey() on the PQ which is ordered by Price.
+The operation is done in O(1) time. No extra space is needed.
+
+
+
+## retrieveLowestMileageCar()
+Similarly, retrieve lowest Mileage is accomplished simply by calling minKey() on the PQ
+which is ordered my mileage. Again, no extra space is needed.
+
+
+## retrieveLowestPriceCarByMakeAndModel()
+Retrieving lowest price by make and model is a little more complicated.
+
+The difficulty here is that we can't just get the lowest price overall, we need to also check
+and make sure that we are getting lowest price for a specific "make" and "model".
+
+I decided that the simplest way to do this would be to copy the Price PQ, and then call minKey() to
+remove items from the copied PQ, UNTIL we get an item that matches our make and mode.
+
+Because we are using a PQ, the FIRST matching item we get using this method which will be 
+the lost price car which meets the criteria.
+
+Because we need to duplicate the content, this method requires extra space proportional to N,
+the number Cars under consideration.
+
+And, since we do NOT know if or when we will get a match, our runtime is O(N). The worst case here
+is when the LAST item on the Queue is our match, OR if there is no matching car for our Make and Model
+at all.
+
+Given that this is a simple task, and essentially a search, I think that the O(N) runtime is acceptable.
+And because copying the data lets us easily find the first match, and to do so both SAFELY and RELIABLY,
+without touching our real data set, I think that the O(N) memory overhead is a fair tradeoff for
+the safety, reliability, and simplicity in engineering effort that it affords.
+
+To sum up:
+- Runtime:  O(N)
+- Space overhead:  Proportional to N
+
+
+## retrieveLowestMileageCarByMakeAndModel()
+This method is done in the exact same fashion as the price retrieval above.
+The only difference is that it copies the Mileage PQ, and searches through the mileage-ordered PQ, instead.
+
+Because this is the same method, it shares the same runtime and space overheads:
+To sum up:
+- Runtime:  O(N)
+- Space overhead: Proportional to N
+
+
+
+
+
